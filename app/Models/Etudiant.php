@@ -13,9 +13,9 @@ class Etudiant extends Model
         'nom',
         'adresse', 
         'telephone',
-        'courriel',
         'date_de_naissance',
-        'ville_id'
+        'ville_id',
+        'user_id'
     ];
 
     // protected $table = 'nom_table';
@@ -24,5 +24,19 @@ class Etudiant extends Model
 
     public function etudiantHasVille(){
         return $this->hasOne('App\Models\Ville', 'id', 'ville_id');
+    }
+
+    public function etudiantHasUser(){
+        return $this->hasOne('App\Models\User','id','user_id');
+    }
+
+    public function ville()
+    {
+        return $this->belongsTo(Ville::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

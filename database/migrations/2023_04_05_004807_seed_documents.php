@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use App\Models\Document;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVillesTable extends Migration
+class SeedDocuments extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +14,7 @@ class CreateVillesTable extends Migration
      */
     public function up()
     {
-        Schema::create('villes', function (Blueprint $table) {
-            // $table->id();
-            $table->increments('id');
-            $table->string('nom', 50);
-            $table->timestamps();
-        });
+        Document::factory()->times(30)->create();
     }
 
     /**
@@ -28,6 +24,6 @@ class CreateVillesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('villes');
+        //
     }
 }

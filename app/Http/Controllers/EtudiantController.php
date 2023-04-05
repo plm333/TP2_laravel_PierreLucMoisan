@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Ville;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class EtudiantController extends Controller
 {
@@ -28,6 +31,7 @@ class EtudiantController extends Controller
      */
     public function create()
     {
+        if( !Auth::user()->is_admin ){return response()->json(['error' => 'Unauthenticated.'], 401);}
         $villes = Ville::select(
             'villes.*'
         )
@@ -45,16 +49,32 @@ class EtudiantController extends Controller
      */
     public function store(Request $request)
     {
+        if( !Auth::user()->is_admin ){return response()->json(['error' => 'Unauthenticated.'], 401);}
+        $request->validate([
+            'nom' => 'required|max:20',
+            'adresse' => 'required|min:10|max:50',
+            'telephone' => 'required|min:10|max:15',
+            'date_de_naissance' => 'required|date|date_format:Y-m-d',
+        ]);
+
+        $user = new User;
+        $user->fill($request->all());
+        $user->password = Hash::make($request->password);
+        $user->email = $request->email;
+        // $user->id = Auth::User()->id;
+        $user->save();
+        //throw new Exception($user->id);
+
         $etudiant = Etudiant::create([ 
             'nom' => $request->nom,
             'adresse' => $request->adresse,
             'telephone' => $request->telephone,
-            'courriel' => $request->courriel,
             'date_de_naissance' => $request->date_de_naissance,
-            'ville_id' => $request->ville_id
+            'ville_id' => $request->ville_id,
+            'user_id' => $user->id
         ]);
 
-        return redirect(route('etudiant.show', $etudiant->id));
+        return redirect(route('etudiant.show', $etudiant));
     }
 
     /**
@@ -65,6 +85,7 @@ class EtudiantController extends Controller
      */
     public function show(Etudiant $etudiant)
     {
+        //throw new Exception($etudiant);
         return view('etudiant.show', ['etudiant' => $etudiant]);
     }
 
@@ -96,15 +117,22 @@ class EtudiantController extends Controller
      */
     public function update(Request $request, Etudiant $etudiant)
     {
-        $etudiant->update([
-            'nom' => $request->nom,
-            'adresse' => $request->adresse,
-            'telephone' => $request->telephone,
-            'courriel' => $request->courriel,
-            'date_de_naissance' => $request->date_de_naissance,
-            'ville_id' => $request->ville_id
-        ]);
+        if( auth()->user()->id == $etudiant->user_id){
+            $request->validate([
+                'nom' => 'required|max:100',
+                'adresse' => 'required|min:10|max:100',
+                'telephone' => 'required|min:10|max:15',
+                'date_de_naissance' => 'required|date|date_format:Y-m-d',
+            ]);
 
+            $etudiant->update([
+                'nom' => $request->nom,
+                'adresse' => $request->adresse,
+                'telephone' => $request->telephone,
+                'date_de_naissance' => $request->date_de_naissance,
+                'ville_id' => $request->ville_id
+            ]);
+        }
         return redirect(route('etudiant.show', $etudiant->id))->withSuccess("L'étudiant a été modifié avec succès");
     }
 
@@ -116,7 +144,9 @@ class EtudiantController extends Controller
      */
     public function destroy(Etudiant $etudiant)
     {
+        $userId = $etudiant->user_id;
         $etudiant->delete();
+        // $userId->delete();
 
         return redirect(route('etudiant.index'));
     }
@@ -137,4 +167,6 @@ class EtudiantController extends Controller
 
         return view('etudiant.page', ['etudiants' => $etudiants]);
     }
+
+
 }

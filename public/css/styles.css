@@ -1,0 +1,56 @@
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.card {
+    margin: 10px 0px 10px 0px;
+}
+
+.row {
+    justify-content: space-around;
+}
+
+.formulaire{
+    width: 50%;
+}
+
+.title{
+    padding-top: 30px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.btn-ajouter{
+    padding-top: 15px;
+    padding-bottom: 40px;
+}
+
+.img-logo{
+    margin-right: 65px;
+}
+    
+.img-student{
+    width: 60%;
+    margin-top: 30px;
+}
+
+.img-article{
+    width: 30%;
+}
+
+.navbar {
+    display:flex;
+    justify-content: space-between;
+    padding: 5px 20px 5px 20px;
+}
+
+.navbar-nav{
+    display: flex;
+    flex-direction: row;
+}
+
+.space__pagination{
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}

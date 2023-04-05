@@ -8,9 +8,9 @@
                     Bienvenue au Collège de Maisonneuve
                 </div>
                 <p class="mt-4">
-                    <a href="{{ route('etudiant.index') }}">Cliquez pour voir les étudiants</a>
-                </p>    
-                <img src="{{ asset('img/image3.webp') }}" alt="">
+                    <!-- <a href="{{ route('etudiant.index') }}">Cliquez pour voir les étudiants</a> -->
+                </p>  
+                <img src="{{ asset('img/image3.webp') }}" class="" alt="">
             </div>    
         </div>
     </div> 
